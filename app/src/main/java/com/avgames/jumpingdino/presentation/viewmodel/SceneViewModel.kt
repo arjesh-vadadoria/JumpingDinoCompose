@@ -13,6 +13,7 @@ import com.avgames.jumpingdino.data.DinoState
 import com.avgames.jumpingdino.data.GameState
 import com.avgames.jumpingdino.presentation.CACTUS_COUNT
 import com.avgames.jumpingdino.presentation.CACTUS_SPEED
+import com.avgames.jumpingdino.presentation.FRAME_DELAY
 import com.avgames.jumpingdino.presentation.deviceWidthInPixels
 import com.avgames.jumpingdino.presentation.distance_between_cactus
 import com.avgames.jumpingdino.presentation.event.GameEvent
@@ -61,7 +62,7 @@ class SceneViewModel : ViewModel() {
             GameEvent.MOVE_CACTUS -> {
                 viewModelScope.launch {
                     while (!gameState.isGameOver) {
-                        delay(1)
+                        delay(FRAME_DELAY)
                         val newList =
                             ArrayList(gameState.cactusState.cactusList.map { it.copy(posX = it.posX - CACTUS_SPEED) })
                         if (newList.isNotEmpty()) {

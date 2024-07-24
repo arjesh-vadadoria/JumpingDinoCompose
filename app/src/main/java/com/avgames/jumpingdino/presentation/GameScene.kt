@@ -28,7 +28,8 @@ val earth_y_position: Float
 
 const val CACTUS_COUNT = 3
 var distance_between_cactus = 250f
-const val CACTUS_SPEED = 1
+const val CACTUS_SPEED = 6
+const val FRAME_DELAY = 8L
 const val DOUBT_FACTOR = 20f
 
 var deviceWidthInPixels = 1920
