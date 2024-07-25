@@ -1,6 +1,5 @@
 package com.avgames.jumpingdino.presentation
 
-import android.util.Log
 import androidx.compose.animation.core.EaseInOutSine
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
@@ -14,7 +13,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.avgames.jumpingdino.data.GameState
@@ -51,21 +49,9 @@ fun GameScene(
 
     if (!gameState.isGameOver) {
         gameState.dinoState.posY = jumpingValue
+        //jump to get down on earth
         if (jumpingValue == gameState.dinoState.jumpHeight) {
             onEvent(GameEvent.JUMP)
-        }
-        for (cactus in gameState.cactusState.cactusList) {
-            if (gameState.dinoState.bounds
-                    .deflate(DOUBT_FACTOR)
-                    .overlaps(
-                        cactus.bounds
-                            .deflate(DOUBT_FACTOR)
-                    )
-            ) {
-                Log.e("lucifer", "GameScene: BOOOOM !!!!!")
-                onEvent(GameEvent.GAME_OVER)
-                return
-            }
         }
     }
 
@@ -79,12 +65,17 @@ fun GameScene(
                 },
                 indication = null
             ) {
-                if (!gameState.isGameOver) {
-                    if (gameState.dinoState.posY == earth_y_position) {
+                when {
+                    !gameState.isGameOver && !gameState.isIntro -> {
+                        if (gameState.dinoState.posY == earth_y_position) {
+                            onEvent(GameEvent.JUMP)
+                        }
+                    }
+
+                    else -> {
+                        onEvent(GameEvent.START_GAME)
                         onEvent(GameEvent.JUMP)
                     }
-                } else {
-                    onEvent(GameEvent.START_GAME)
                 }
             }
     ) {
@@ -96,11 +87,25 @@ fun GameScene(
             CactusView(cactusList = gameState.cactusState)
         }
     }
+    ScoreView(
+        modifier = Modifier
+            .padding(
+                vertical = 40.dp,
+                horizontal = 20.dp
+            ),
+        gameState = gameState
+    )
+    IntroView(
+        modifier = Modifier
+            .padding(20.dp)
+            .fillMaxSize(),
+        isIntro = gameState.isIntro
+    )
     GameOverView(
         modifier = Modifier
             .padding(20.dp)
-            .fillMaxSize()
-        , isGameOver = gameState.isGameOver
+            .fillMaxSize(),
+        isGameOver = gameState.isGameOver
     )
 }
 

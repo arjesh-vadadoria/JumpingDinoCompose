@@ -13,34 +13,34 @@ import androidx.compose.ui.unit.sp
 import com.avgames.jumpingdino.ui.theme.font
 
 @Composable
-fun GameOverView(modifier: Modifier, isGameOver: Boolean) {
-    if (isGameOver) {
+fun IntroView(
+    modifier: Modifier,
+    isIntro: Boolean
+) {
+    if (isIntro) {
         Box(modifier) {
-            Column(
-                modifier = Modifier
-                    .align(Alignment.Center)
-            ) {
+            Column(modifier = Modifier.align(Alignment.Center)) {
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
-                        .alpha(0.9f),
+                        .alpha(0.8f),
                     style = TextStyle.Default.copy(
-                        fontFamily = font,
                         fontSize = 30.sp,
+                        fontFamily = font,
                         fontWeight = FontWeight(600),
                     ),
-                    text = "Game Over"
+                    text = "Start Game",
                 )
                 Text(
                     modifier = Modifier
                         .align(Alignment.CenterHorizontally)
                         .alpha(0.6f),
                     style = TextStyle.Default.copy(
-                        fontFamily = font,
                         fontSize = 20.sp,
+                        fontFamily = font,
                         fontWeight = FontWeight(300),
                     ),
-                    text = "Tap to start again",
+                    text = "Tap to start game",
                 )
             }
         }

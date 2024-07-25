@@ -12,7 +12,6 @@ import com.avgames.jumpingdino.presentation.GameScene
 import com.avgames.jumpingdino.presentation.deviceHeightInPixels
 import com.avgames.jumpingdino.presentation.deviceWidthInPixels
 import com.avgames.jumpingdino.presentation.distance_between_cactus
-import com.avgames.jumpingdino.presentation.event.GameEvent
 import com.avgames.jumpingdino.presentation.viewmodel.SceneViewModel
 import com.avgames.jumpingdino.ui.theme.JumpingDinoTheme
 
@@ -29,8 +28,6 @@ class MainActivity : ComponentActivity() {
         deviceWidthInPixels = deviceMetrics.widthPixels
         deviceHeightInPixels = deviceMetrics.heightPixels
         distance_between_cactus = (deviceWidthInPixels * 0.5f)
-        sceneViewModel.onEvent(GameEvent.INTRO)
-        sceneViewModel.onEvent(GameEvent.MOVE_CACTUS)
         setContent {
             JumpingDinoTheme {
                 GameScene(
