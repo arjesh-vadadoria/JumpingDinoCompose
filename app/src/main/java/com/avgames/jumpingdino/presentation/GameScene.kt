@@ -18,22 +18,26 @@ import androidx.compose.ui.unit.dp
 import com.avgames.jumpingdino.data.GameState
 import com.avgames.jumpingdino.presentation.event.GameEvent
 
-const val EARTH_GROUND_STROKE_WIDTH = 10f
-val starting_point: Float
-    get() = deviceWidthInPixels.toFloat() * 0.1f
+const val EARTH_GROUND_STROKE_WIDTH = 3f
+const val EARTH_OFFSET = 200
+const val EARTH_SPEED = 9
+const val MAX_EARTH_BLOCKS = 2
 val earth_y_position: Float
     get() = deviceHeightInPixels.toFloat() - 100f
 
+val starting_point: Float
+    get() = deviceWidthInPixels.toFloat() * 0.1f
+
 const val CACTUS_COUNT = 3
 var distance_between_cactus = 250f
-const val CACTUS_SPEED = 6
+const val CACTUS_SPEED = EARTH_SPEED
 const val FRAME_DELAY = 8L
 const val DOUBT_FACTOR = 20f
 
 var deviceWidthInPixels = 1920
 var deviceHeightInPixels = 1920
 
-val showBounds = true
+val showBounds = false
 
 @Composable
 fun GameScene(
@@ -82,7 +86,7 @@ fun GameScene(
         Canvas(
             modifier = Modifier.weight(1f)
         ) {
-            EarthView()
+            EarthView(earthState = gameState.earthState)
             DinoView(dinoState = gameState.dinoState)
             CactusView(cactusList = gameState.cactusState)
         }

@@ -9,13 +9,19 @@ import androidx.lifecycle.viewModelScope
 import com.avgames.jumpingdino.data.CactusModel
 import com.avgames.jumpingdino.data.CactusState
 import com.avgames.jumpingdino.data.DinoState
+import com.avgames.jumpingdino.data.EarthModel
+import com.avgames.jumpingdino.data.EarthState
 import com.avgames.jumpingdino.data.GameState
 import com.avgames.jumpingdino.presentation.CACTUS_COUNT
 import com.avgames.jumpingdino.presentation.CACTUS_SPEED
 import com.avgames.jumpingdino.presentation.DOUBT_FACTOR
+import com.avgames.jumpingdino.presentation.EARTH_OFFSET
+import com.avgames.jumpingdino.presentation.EARTH_SPEED
 import com.avgames.jumpingdino.presentation.FRAME_DELAY
+import com.avgames.jumpingdino.presentation.MAX_EARTH_BLOCKS
 import com.avgames.jumpingdino.presentation.deviceWidthInPixels
 import com.avgames.jumpingdino.presentation.distance_between_cactus
+import com.avgames.jumpingdino.presentation.earth_y_position
 import com.avgames.jumpingdino.presentation.event.GameEvent
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -26,6 +32,7 @@ class SceneViewModel : ViewModel() {
         GameState(
             dinoState = DinoState(),
             cactusState = CactusState(arrayListOf()),
+            earthState = EarthState(),
             isGameOver = false,
             isIntro = true,
             highScore = 0,
@@ -35,12 +42,14 @@ class SceneViewModel : ViewModel() {
         private set
 
     private val additionalCactusDistance: Int
-        get() = (-(distance_between_cactus * 0.1).toInt()..(distance_between_cactus * 0.3).toInt()).random()
+        get() = (-(distance_between_cactus * 0.05).toInt()..(distance_between_cactus * 0.4).toInt()).random()
 
     fun onEvent(event: GameEvent) {
         when (event) {
             GameEvent.INTRO -> {
                 gameState.cactusState.cactusList.clear()
+                gameState.earthState.blockList.clear()
+
                 var startX = deviceWidthInPixels.toFloat() - 100f
                 for (i in 0..CACTUS_COUNT) {
                     gameState.cactusState.cactusList.add(
@@ -49,8 +58,20 @@ class SceneViewModel : ViewModel() {
                             posX = startX,
                         )
                     )
-                    startX += (distance_between_cactus + (-300..300).random())
+                    startX += distance_between_cactus
                     startX += additionalCactusDistance
+                }
+
+                var earthStartX = -EARTH_OFFSET.toFloat()
+                for (i in 0 until MAX_EARTH_BLOCKS) {
+                    var earth = EarthModel(
+                        posX = earthStartX,
+                        posY = earth_y_position + (20 + i * 10),
+                        size = deviceWidthInPixels + (EARTH_OFFSET * 2).toFloat(),
+                    )
+
+                    gameState.earthState.blockList.add(earth)
+                    earthStartX += earth.size
                 }
             }
 
@@ -59,6 +80,7 @@ class SceneViewModel : ViewModel() {
                     gameState = GameState(
                         dinoState = DinoState(),
                         cactusState = CactusState(arrayListOf()),
+                        earthState = EarthState(),
                         isGameOver = false,
                         isIntro = false,
                         highScore = gameState.highScore,
@@ -73,10 +95,26 @@ class SceneViewModel : ViewModel() {
                 viewModelScope.launch {
                     while (!gameState.isGameOver) {
                         delay(FRAME_DELAY)
+//                        when {
+//                            gameState.dinoState.isJumping && gameState.dinoState.posY >= gameState.dinoState.jumpHeight -> {
+//                                gameState.dinoState.posY -= 20
+//                                if (gameState.dinoState.posY <= gameState.dinoState.jumpHeight) {
+//                                    gameState.dinoState.isJumping = false
+//                                }
+//                            }
+//
+//                            gameState.dinoState.posY >= gameState.dinoState.jumpHeight && gameState.dinoState.posY <= earth_y_position -> {
+//                                if (gameState.dinoState.posY <= earth_y_position || gameState.dinoState.posY >= earth_y_position - 160f) {
+//                                    gameState.dinoState.posY = earth_y_position
+//                                } else {
+//                                    gameState.dinoState.posY -= 20
+//                                }
+//                            }
+//                        }
                         val newList =
                             ArrayList(gameState.cactusState.cactusList.map { it.copy(posX = it.posX - CACTUS_SPEED) })
                         if (newList.isNotEmpty()) {
-                            if (newList.first().posX <= -newList.first().width) {
+                            if (newList.first().posX <= -(newList.first().width + 50)) {
                                 newList.removeFirst()
                                 newList.add(
                                     CactusModel(
@@ -85,11 +123,6 @@ class SceneViewModel : ViewModel() {
                                     )
                                 )
                             }
-                            val cactusState = gameState.cactusState.copy(cactusList = newList)
-                            gameState.currentScore += 1
-                            gameState = gameState.copy(
-                                cactusState = cactusState,
-                            )
                             if (gameState.dinoState.bounds
                                     .deflate(DOUBT_FACTOR)
                                     .overlaps(
@@ -101,6 +134,27 @@ class SceneViewModel : ViewModel() {
                                 onEvent(GameEvent.GAME_OVER)
                                 return@launch
                             }
+                            val endPos =
+                                gameState.earthState.blockList[MAX_EARTH_BLOCKS - 1].posX + gameState.earthState.blockList[MAX_EARTH_BLOCKS - 1].size
+                            for (i in 0 until MAX_EARTH_BLOCKS) {
+                                val block = gameState.earthState.blockList[i]
+                                block.posX -= EARTH_SPEED
+                                if ((block.posX + block.size) < -EARTH_OFFSET) {
+                                    block.posX = endPos
+                                }
+                            }
+                            if (!gameState.dinoState.isJumping) {
+                                if (gameState.dinoState.keyframe >= 10) {
+                                    gameState.dinoState.keyframe = 0
+                                } else {
+                                    gameState.dinoState.keyframe += 1
+                                }
+                            }
+                            val cactusState = gameState.cactusState.copy(cactusList = newList)
+                            gameState.currentScore += 1
+                            gameState = gameState.copy(
+                                cactusState = cactusState,
+                            )
                         }
                     }
                 }
