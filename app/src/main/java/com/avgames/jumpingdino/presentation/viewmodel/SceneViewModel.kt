@@ -89,6 +89,7 @@ class SceneViewModel : ViewModel() {
                     onEvent(GameEvent.INTRO)
                     onEvent(GameEvent.MOVE_CACTUS)
                 }
+                
             }
 
             GameEvent.MOVE_CACTUS -> {
