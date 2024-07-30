@@ -12,9 +12,10 @@ import com.avgames.jumpingdino.utils.DinoPath2
 data class DinoState(
     var posX: Float = starting_point,
     var posY: Float = earth_y_position,
-    var gravity: Float = 2.5f,
+    var gravity: Float = 0f,
     val color: Color = DinoColor,
     var isJumping: Boolean = false,
+    var velocity: Float = 0f,
     var pathList: ArrayList<Path> = arrayListOf(),
     var keyframe: Int = 0,
 ) {

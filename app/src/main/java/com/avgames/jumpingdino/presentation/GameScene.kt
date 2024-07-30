@@ -51,13 +51,13 @@ fun GameScene(
         label = "jump"
     )
 
-    if (!gameState.isGameOver) {
-        gameState.dinoState.posY = jumpingValue
-        //jump to get down on earth
-        if (jumpingValue == gameState.dinoState.jumpHeight) {
-            onEvent(GameEvent.JUMP)
-        }
-    }
+//    if (!gameState.isGameOver) {
+//        gameState.dinoState.posY = jumpingValue
+//        //jump to get down on earth
+//        if (jumpingValue == gameState.dinoState.jumpHeight) {
+//            onEvent(GameEvent.JUMP)
+//        }
+//    }
 
 
     Column(
@@ -71,14 +71,11 @@ fun GameScene(
             ) {
                 when {
                     !gameState.isGameOver && !gameState.isIntro -> {
-                        if (gameState.dinoState.posY == earth_y_position) {
-                            onEvent(GameEvent.JUMP)
-                        }
+                        onEvent(GameEvent.JUMP)
                     }
 
                     else -> {
                         onEvent(GameEvent.START_GAME)
-                        onEvent(GameEvent.JUMP)
                     }
                 }
             }

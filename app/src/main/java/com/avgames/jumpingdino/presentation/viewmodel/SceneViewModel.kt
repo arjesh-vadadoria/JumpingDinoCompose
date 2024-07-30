@@ -89,29 +89,24 @@ class SceneViewModel : ViewModel() {
                     onEvent(GameEvent.INTRO)
                     onEvent(GameEvent.MOVE_CACTUS)
                 }
-                
+
             }
 
             GameEvent.MOVE_CACTUS -> {
                 viewModelScope.launch {
                     while (!gameState.isGameOver) {
                         delay(FRAME_DELAY)
-//                        when {
-//                            gameState.dinoState.isJumping && gameState.dinoState.posY >= gameState.dinoState.jumpHeight -> {
-//                                gameState.dinoState.posY -= 20
-//                                if (gameState.dinoState.posY <= gameState.dinoState.jumpHeight) {
-//                                    gameState.dinoState.isJumping = false
-//                                }
-//                            }
-//
-//                            gameState.dinoState.posY >= gameState.dinoState.jumpHeight && gameState.dinoState.posY <= earth_y_position -> {
-//                                if (gameState.dinoState.posY <= earth_y_position || gameState.dinoState.posY >= earth_y_position - 160f) {
-//                                    gameState.dinoState.posY = earth_y_position
-//                                } else {
-//                                    gameState.dinoState.posY -= 20
-//                                }
-//                            }
-//                        }
+
+                        gameState.dinoState.posY += gameState.dinoState.velocity
+                        gameState.dinoState.velocity += gameState.dinoState.gravity
+
+                        if (gameState.dinoState.posY > earth_y_position) {
+                            gameState.dinoState.posY = earth_y_position
+                            gameState.dinoState.velocity = 0f
+                            gameState.dinoState.gravity = 0f
+                            gameState.dinoState.isJumping = false
+                        }
+
                         val newList =
                             ArrayList(gameState.cactusState.cactusList.map { it.copy(posX = it.posX - CACTUS_SPEED) })
                         if (newList.isNotEmpty()) {
@@ -163,13 +158,22 @@ class SceneViewModel : ViewModel() {
 
             GameEvent.JUMP -> {
                 viewModelScope.launch {
-                    val dinoState =
-                        if (gameState.dinoState.posY == gameState.dinoState.jumpHeight) {
-                            gameState.dinoState.copy(isJumping = false)
-                        } else {
-                            gameState.dinoState.copy(isJumping = true)
-                        }
-                    gameState = gameState.copy(dinoState = dinoState)
+                    if (gameState.dinoState.posY == earth_y_position) {
+                        gameState = gameState.copy(
+                            dinoState = gameState.dinoState.copy(
+                                isJumping = true,
+                                velocity = -40f,
+                                gravity = 2.5f
+                            )
+                        )
+                    }
+//                    val dinoState =
+//                        if (gameState.dinoState.posY == gameState.dinoState.jumpHeight) {
+//                            gameState.dinoState.copy(isJumping = false)
+//                        } else {
+//                            gameState.dinoState.copy(isJumping = true)
+//                        }
+//                    gameState = gameState.copy(dinoState = dinoState)
                 }
             }
 

@@ -22,7 +22,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-
+        printStars()
         var deviceMetrics = DisplayMetrics()
         windowManager.defaultDisplay.getMetrics(deviceMetrics)
         deviceWidthInPixels = deviceMetrics.widthPixels
@@ -36,6 +36,10 @@ class MainActivity : ComponentActivity() {
                 )
             }
         }
+    }
+
+    private fun printStars() {
+
     }
 }
 
