@@ -2,6 +2,7 @@ package com.avgames.jumpingdino
 
 import android.os.Bundle
 import android.util.DisplayMetrics
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -39,7 +40,13 @@ class MainActivity : ComponentActivity() {
     }
 
     private fun printStars() {
-
+        val n = 5
+        for (row in 1..n) {
+            for (col in 1..n) {
+                print(row)
+            }
+            print("\n")
+        }
     }
 }
 

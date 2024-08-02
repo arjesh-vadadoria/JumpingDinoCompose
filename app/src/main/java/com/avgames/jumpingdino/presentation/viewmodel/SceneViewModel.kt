@@ -167,13 +167,6 @@ class SceneViewModel : ViewModel() {
                             )
                         )
                     }
-//                    val dinoState =
-//                        if (gameState.dinoState.posY == gameState.dinoState.jumpHeight) {
-//                            gameState.dinoState.copy(isJumping = false)
-//                        } else {
-//                            gameState.dinoState.copy(isJumping = true)
-//                        }
-//                    gameState = gameState.copy(dinoState = dinoState)
                 }
             }
 

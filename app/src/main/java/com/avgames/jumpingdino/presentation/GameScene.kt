@@ -1,8 +1,5 @@
 package com.avgames.jumpingdino.presentation
 
-import androidx.compose.animation.core.EaseInOutSine
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -11,7 +8,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
@@ -44,22 +40,6 @@ fun GameScene(
     gameState: GameState,
     onEvent: (GameEvent) -> Unit
 ) {
-
-    val jumpingValue by animateFloatAsState(
-        targetValue = if (gameState.dinoState.isJumping) gameState.dinoState.jumpHeight else earth_y_position,
-        animationSpec = tween(easing = EaseInOutSine),
-        label = "jump"
-    )
-
-//    if (!gameState.isGameOver) {
-//        gameState.dinoState.posY = jumpingValue
-//        //jump to get down on earth
-//        if (jumpingValue == gameState.dinoState.jumpHeight) {
-//            onEvent(GameEvent.JUMP)
-//        }
-//    }
-
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
