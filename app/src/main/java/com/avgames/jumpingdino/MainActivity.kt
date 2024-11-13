@@ -1,5 +1,11 @@
 package com.avgames.jumpingdino
 
+import android.content.Context
+import android.media.AudioFormat
+import android.media.AudioManager
+import android.media.AudioRecord
+import android.media.MediaRecorder
+import android.media.audiofx.Visualizer
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.util.Log
@@ -9,12 +15,17 @@ import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.lifecycleScope
 import com.avgames.jumpingdino.presentation.GameScene
 import com.avgames.jumpingdino.presentation.deviceHeightInPixels
 import com.avgames.jumpingdino.presentation.deviceWidthInPixels
 import com.avgames.jumpingdino.presentation.distance_between_cactus
 import com.avgames.jumpingdino.presentation.viewmodel.SceneViewModel
 import com.avgames.jumpingdino.ui.theme.JumpingDinoTheme
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlin.math.sqrt
 
 class MainActivity : ComponentActivity() {
 
@@ -49,7 +60,6 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
 
 @Preview(showBackground = true, showSystemUi = true)
 @Composable

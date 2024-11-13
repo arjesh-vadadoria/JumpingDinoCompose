@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.avgames.jumpingdino.data.GameState
 import com.avgames.jumpingdino.presentation.event.GameEvent
+import com.avgames.jumpingdino.utils.MicHelper
 
 const val EARTH_GROUND_STROKE_WIDTH = 3f
 const val EARTH_OFFSET = 200
@@ -56,6 +57,14 @@ fun GameScene(
 
                     else -> {
                         onEvent(GameEvent.START_GAME)
+                        MicHelper.startListning {
+                            if (it > 1500) {
+                                onEvent(GameEvent.JUMP)
+                            }
+//                            if (it > 1500 && gameState.isGameOver) {
+//                                onEvent(GameEvent.START_GAME)
+//                            }
+                        }
                     }
                 }
             }
